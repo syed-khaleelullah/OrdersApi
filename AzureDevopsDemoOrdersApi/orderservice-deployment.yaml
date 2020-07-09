@@ -1,0 +1,34 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ordersapi-deployment
+  labels:
+    app: ordersapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ordersapi	  
+  template:
+    metadata:
+      labels:
+        app: ordersapi
+    spec:
+      containers:
+      - name: ordersapi
+        image: acrazuredevopsdemo.azurecr.io/orderservice:latest
+        ports:
+        - containerPort: 8080
+      imagePullSecrets:
+      - name: mysupersecret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderservice
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: ordersapi
